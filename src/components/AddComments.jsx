@@ -1,13 +1,46 @@
+import { useState } from "react";
 import styled from "styled-components";
+import data from "../data.json";
 
 function AddComments(props) {
+  const [textAreaValue, setTextAreaValue] = useState("");
+
+  function getTextAreaValue(event) {
+    setTextAreaValue(event.target.value);
+  }
+
+  function AddnewComment() {
+    props.setChangeData([
+      ...props.changeData,
+      {
+        id: Math.random(),
+        content: textAreaValue,
+        createdAt: "Today",
+        score: 0,
+        user: {
+          image: {
+            png: data.currentUser.image.png,
+            webp: data.currentUser.image.webp,
+          },
+          username: data.currentUser.username,
+        },
+        replies: [],
+      },
+    ]);
+    setTextAreaValue("");
+  }
+
   return (
     <>
       <Container>
-        <TextArea placeholder="Add a comment…" />
+        <TextArea
+          onChange={getTextAreaValue}
+          value={textAreaValue}
+          placeholder="Add a comment…"
+        />
         <Info>
           <Image src={props.img} alt="User Avatar" />
-          <Button>Send</Button>
+          <Button onClick={AddnewComment}>Send</Button>
         </Info>
       </Container>
     </>

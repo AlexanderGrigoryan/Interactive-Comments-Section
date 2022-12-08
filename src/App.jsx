@@ -3,15 +3,22 @@ import AddComments from "./components/AddComments";
 import Comments from "./components/Comments";
 import Reply from "./components/Reply";
 import Data from "./data.json";
+import { useState } from "react";
 
 function App() {
+  const [changeData, setChangeData] = useState(Data.comments);
+
+  console.log(changeData)
+
   return (
+
+
     <div className="App">
       <div className="container">
-        {Data.comments.map((item) => {
+        {changeData.map((item) => {
           return (
             <div>
-              <Comments
+              <Comments currentId={item.id} changeData={changeData} setChangeData={setChangeData}
                 img={item.user.image.png}
                 name={item.user.username}
                 date={item.createdAt}
@@ -33,7 +40,11 @@ function App() {
           );
         })}
 
-        <AddComments img={Data.currentUser.image.png} />
+        <AddComments
+          changeData={changeData}
+          setChangeData={setChangeData}
+          img={Data.currentUser.image.png}
+        />
       </div>
     </div>
   );

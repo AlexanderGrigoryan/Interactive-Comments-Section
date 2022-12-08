@@ -1,30 +1,34 @@
 import styled from "styled-components";
-import MinusIcon from "../img/icon-minus.svg";
-import PlusIcon from "../img/icon-plus.svg";
-import ReplyArrow from "../img/icon-reply.svg";
+import minusIcon from "../img/icon-minus.svg";
+import plusIcon from "../img/icon-plus.svg";
+import replyArrow from "../img/icon-reply.svg";
+import data from "../data.json";
 
-function Comments(props) {
+function Reply(props) {
   return (
     <>
       <Container>
-        <Info>
+        <UserInfo>
           <Avatar src={process.env.PUBLIC_URL + props.img} alt="User Avatar" />
-          <Username>{props.name}</Username>
-          <Date>{props.date}</Date>
-        </Info>
-        <Comment>{props.comment}</Comment>
+          <Username>{props.nameReply}</Username>
+          {data.currentUser.username === props.nameReply ? (
+            <CurrentUser>you</CurrentUser>
+          ) : null}
+          <Date>{props.dateReply}</Date>
+        </UserInfo>
+        <Comment>{props.commentReply}</Comment>
         <CommonBlock>
           <Score>
             <ScoreButton>
-              <Plus src={PlusIcon} alt="plus" />
+              <Plus src={plusIcon} alt="plus" />
             </ScoreButton>
-            <UserScore>{props.score}</UserScore>
+            <UserScore>{props.scoreReply}</UserScore>
             <ScoreButton>
-              <Minus src={MinusIcon} alt="minus" />
+              <Minus src={minusIcon} alt="minus" />
             </ScoreButton>
           </Score>
           <ReplyBlock>
-            <ReplyIcon src={ReplyArrow} alt="reply arrow" />
+            <ReplyIcon src={replyArrow} alt="reply arrow" />
             <ReplyLink>Reply</ReplyLink>
           </ReplyBlock>
         </CommonBlock>
@@ -33,14 +37,14 @@ function Comments(props) {
   );
 }
 
-export default Comments;
+export default Reply;
 
 const Container = styled.div`
   width: 343px;
-  padding: 16px 16px 24px 16px;
+  padding: 16px 16px 24px 32px;
 `;
 
-const Info = styled.div`
+const UserInfo = styled.div`
   display: flex;
   align-items: center;
   column-gap: 16px;
@@ -57,6 +61,21 @@ const Username = styled.p`
   font-weight: 500;
   line-height: 19px;
   color: #334253;
+`;
+
+const CurrentUser = styled.div`
+  width: 36px;
+  height: 19px;
+  border-radius: 2px;
+  background: #5357b6;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 15px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -8px;
 `;
 
 const Date = styled.p`
