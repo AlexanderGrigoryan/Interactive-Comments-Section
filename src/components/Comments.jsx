@@ -8,36 +8,75 @@ import data from "../data.json";
 import Modal from "./Modal";
 import { useState } from "react";
 
-function Comments(props) {
+function Comments({
+  textAreaValue,
+  setTextAreaValue,
+  commentValue,
+  setCommentValue,
+  currentId,
+  changeData,
+  setChangeData,
+  img,
+  name,
+  date,
+  comment,
+  score,
+}) {
   const [isOpen, setIsOpen] = useState(false);
+  const [hideCurrentComment, setHideCurrentComment] = useState(false);
 
   function openModal() {
     setIsOpen(true);
+  }
+
+  function updateCommentValue(event) {
+    setCommentValue(event.target.value);
+  }
+
+  function AppearTextArea() {
+    setHideCurrentComment(true);
+  }
+
+  function updateComment() {
+    const updatedData = [...changeData];
+    const dataIndex = updatedData.findIndex(
+      (element) => element.id === currentId
+    );
+    updatedData[dataIndex].content = commentValue;
+    setChangeData(updatedData);
+    setHideCurrentComment(false);
   }
 
   return (
     <>
       <Container>
         <Info>
-          <Avatar src={process.env.PUBLIC_URL + props.img} alt="User Avatar" />
-          <Username>{props.name}</Username>
-          {data.currentUser.username === props.name ? (
+          <Avatar src={process.env.PUBLIC_URL + img} alt="User Avatar" />
+          <Username>{name}</Username>
+          {data.currentUser.username === name ? (
             <CurrentUser>you</CurrentUser>
           ) : null}
-          <Date>{props.date}</Date>
+          <Date>{date}</Date>
         </Info>
-        <Comment>{props.comment}</Comment>
+        {hideCurrentComment ? (
+          <TextAreaContainer>
+            <TextArea defaultValue={comment} onChange={updateCommentValue} />
+            <UpdateButton onClick={updateComment}>UPDATE</UpdateButton>
+          </TextAreaContainer>
+        ) : (
+          <Comment>{comment}</Comment>
+        )}
         <CommonBlock>
           <Score>
             <ScoreButton>
               <Plus src={plusIcon} alt="plus" />
             </ScoreButton>
-            <UserScore>{props.score}</UserScore>
+            <UserScore>{score}</UserScore>
             <ScoreButton>
               <Minus src={minusIcon} alt="minus" />
             </ScoreButton>
           </Score>
-          {data.currentUser.username === props.name ? (
+          {data.currentUser.username === name ? (
             <UserFunctions>
               <DeleteBlock>
                 <Delete src={deleteIcon} alt="reply arrow" />
@@ -45,7 +84,7 @@ function Comments(props) {
               </DeleteBlock>
               <EditBlock>
                 <EditIcon src={edit} alt="reply arrow" />
-                <EditLink>Edit</EditLink>
+                <EditLink onClick={AppearTextArea}>Edit</EditLink>
               </EditBlock>
             </UserFunctions>
           ) : (
@@ -57,9 +96,9 @@ function Comments(props) {
         </CommonBlock>
         {isOpen ? (
           <Modal
-            currentId={props.currentId}
-            changeData={props.changeData}
-            setChangeData={props.setChangeData}
+            currentId={currentId}
+            changeData={changeData}
+            setChangeData={setChangeData}
             setIsOpen={setIsOpen}
           />
         ) : null}
@@ -190,7 +229,7 @@ const EditIcon = styled.img`
   height: 12.25px;
 `;
 
-const EditLink = styled.a`
+const EditLink = styled.button`
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -218,4 +257,32 @@ const DeleteLink = styled.button`
   color: #ed6368;
   cursor: pointer;
   text-decoration: none;
+`;
+
+const TextAreaContainer = styled.div``;
+
+const TextArea = styled.textarea`
+  width: 311px;
+  min-height: 96px;
+  border-radius: 8px;
+  padding: 12px 24px;
+  outline: 1px solid #5357b6;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  resize: none;
+  margin-bottom: 16px;
+  color: #67727e;
+`;
+
+const UpdateButton = styled.button`
+  width: 104px;
+  height: 48px;
+  border-radius: 8px;
+  background: #5357b6;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #ffffff;
+  cursor: pointer;
 `;

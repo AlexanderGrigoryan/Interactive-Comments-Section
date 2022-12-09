@@ -7,18 +7,23 @@ import { useState } from "react";
 
 function App() {
   const [changeData, setChangeData] = useState(Data.comments);
-
-  console.log(changeData)
+  const [textAreaValue, setTextAreaValue] = useState("");
+  const [commentValue, setCommentValue] = useState("");
 
   return (
-
-
     <div className="App">
       <div className="container">
         {changeData.map((item) => {
           return (
             <div>
-              <Comments currentId={item.id} changeData={changeData} setChangeData={setChangeData}
+              <Comments
+                textAreaValue={textAreaValue}
+                setTextAreaValue={setTextAreaValue}
+                commentValue={commentValue}
+                setCommentValue={setCommentValue}
+                currentId={item.id}
+                changeData={changeData}
+                setChangeData={setChangeData}
                 img={item.user.image.png}
                 name={item.user.username}
                 date={item.createdAt}
@@ -41,6 +46,8 @@ function App() {
         })}
 
         <AddComments
+          textAreaValue={textAreaValue}
+          setTextAreaValue={setTextAreaValue}
           changeData={changeData}
           setChangeData={setChangeData}
           img={Data.currentUser.image.png}

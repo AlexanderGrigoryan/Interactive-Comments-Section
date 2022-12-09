@@ -1,12 +1,10 @@
-import { useState } from "react";
 import styled from "styled-components";
 import data from "../data.json";
 
 function AddComments(props) {
-  const [textAreaValue, setTextAreaValue] = useState("");
-
+  
   function getTextAreaValue(event) {
-    setTextAreaValue(event.target.value);
+    props.setTextAreaValue(event.target.value);
   }
 
   function AddnewComment() {
@@ -14,7 +12,7 @@ function AddComments(props) {
       ...props.changeData,
       {
         id: Math.random(),
-        content: textAreaValue,
+        content: props.textAreaValue,
         createdAt: "Today",
         score: 0,
         user: {
@@ -27,7 +25,7 @@ function AddComments(props) {
         replies: [],
       },
     ]);
-    setTextAreaValue("");
+    props.setTextAreaValue("");
   }
 
   return (
@@ -35,7 +33,7 @@ function AddComments(props) {
       <Container>
         <TextArea
           onChange={getTextAreaValue}
-          value={textAreaValue}
+          value={props.textAreaValue}
           placeholder="Add a comment…"
         />
         <Info>
