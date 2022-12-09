@@ -24,6 +24,8 @@ function Comments({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [hideCurrentComment, setHideCurrentComment] = useState(false);
+  const [disablePlus, setDisablePlus] = useState(false);
+  const [disableMinus, setDisableMinus] = useState(true);
 
   function openModal() {
     setIsOpen(true);
@@ -47,6 +49,31 @@ function Comments({
     setHideCurrentComment(false);
   }
 
+  function minusRate() {
+    const updateMinus = [...changeData];
+    const minusIndex = updateMinus.findIndex(
+      (element) => element.id === currentId
+    );
+    updateMinus[minusIndex].score -= 1;
+    setChangeData(updateMinus);
+    setDisableMinus(true);
+    setDisablePlus(false);
+    setDisableMinus(false);
+    setDisableMinus(true);
+  }
+
+  function plusRate() {
+    const updatePlus = [...changeData];
+    const plusIndex = updatePlus.findIndex(
+      (element) => element.id === currentId
+    );
+    updatePlus[plusIndex].score += 1;
+    setChangeData(updatePlus);
+    setDisableMinus(false);
+    setDisablePlus(true);
+    setDisableMinus(false);
+  }
+
   return (
     <>
       <Container>
@@ -68,11 +95,11 @@ function Comments({
         )}
         <CommonBlock>
           <Score>
-            <ScoreButton>
+            <ScoreButton disabled={disablePlus} onClick={plusRate}>
               <Plus src={plusIcon} alt="plus" />
             </ScoreButton>
             <UserScore>{score}</UserScore>
-            <ScoreButton>
+            <ScoreButton disabled={disableMinus} onClick={minusRate}>
               <Minus src={minusIcon} alt="minus" />
             </ScoreButton>
           </Score>
