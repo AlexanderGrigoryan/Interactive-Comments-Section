@@ -1,4 +1,3 @@
-import "./App.css";
 import AddComments from "./components/AddComments";
 import Comments from "./components/Comments";
 import Reply from "./components/Reply";

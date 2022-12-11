@@ -26,6 +26,9 @@ function Comments({
   const [hideCurrentComment, setHideCurrentComment] = useState(false);
   const [disablePlus, setDisablePlus] = useState(false);
   const [disableMinus, setDisableMinus] = useState(true);
+  const [isReply, setIsReply] = useState(false);
+  const [replyValue, setReplyValue] = useState("");
+  const [notMobile, setNotMobile] = useState(false);
 
   function openModal() {
     setIsOpen(true);
@@ -74,61 +77,117 @@ function Comments({
     setDisableMinus(false);
   }
 
+  function showReply() {
+    setIsReply(true);
+  }
+
+  function getReplyValue(event) {
+    setReplyValue(event.target.value);
+  }
+
+  function addReply() {
+    setChangeData([
+      ...changeData,
+      {
+        id: Math.random(),
+        content: replyValue,
+        createdAt: "Today",
+        score: 0,
+        replyingTo: "ramsesmiron",
+        user: {
+          image: {
+            png: data.currentUser.image.png,
+            webp: data.currentUser.image.webp,
+          },
+          username: data.currentUser.username,
+        },
+      },
+    ]);
+  }
+
   return (
     <>
       <Container>
-        <Info>
-          <Avatar src={process.env.PUBLIC_URL + img} alt="User Avatar" />
-          <Username>{name}</Username>
-          {data.currentUser.username === name ? (
-            <CurrentUser>you</CurrentUser>
-          ) : null}
-          <Date>{date}</Date>
-        </Info>
-        {hideCurrentComment ? (
-          <TextAreaContainer>
-            <TextArea defaultValue={comment} onChange={updateCommentValue} />
-            <UpdateButton onClick={updateComment}>UPDATE</UpdateButton>
-          </TextAreaContainer>
-        ) : (
-          <Comment>{comment}</Comment>
-        )}
-        <CommonBlock>
-          <Score>
-            <ScoreButton disabled={disablePlus} onClick={plusRate}>
-              <Plus src={plusIcon} alt="plus" />
-            </ScoreButton>
-            <UserScore>{score}</UserScore>
-            <ScoreButton disabled={disableMinus} onClick={minusRate}>
-              <Minus src={minusIcon} alt="minus" />
-            </ScoreButton>
-          </Score>
-          {data.currentUser.username === name ? (
-            <UserFunctions>
-              <DeleteBlock>
-                <Delete src={deleteIcon} alt="reply arrow" />
-                <DeleteLink onClick={openModal}>Delete</DeleteLink>
-              </DeleteBlock>
-              <EditBlock>
-                <EditIcon src={edit} alt="reply arrow" />
-                <EditLink onClick={AppearTextArea}>Edit</EditLink>
-              </EditBlock>
-            </UserFunctions>
-          ) : (
-            <ReplyBlock>
+        <ScoreResp>
+          <ScoreButton disabled={disablePlus} onClick={plusRate}>
+            <Plus src={plusIcon} alt="plus" />
+          </ScoreButton>
+          <UserScore>{score}</UserScore>
+          <ScoreButton disabled={disableMinus} onClick={minusRate}>
+            <Minus src={minusIcon} alt="minus" />
+          </ScoreButton>
+        </ScoreResp>
+        <CommentContainer>
+          <Info>
+            <InfoContainer>
+              <Avatar src={process.env.PUBLIC_URL + img} alt="User Avatar" />
+              <Username>{name}</Username>
+              {data.currentUser.username === name ? (
+                <CurrentUser>you</CurrentUser>
+              ) : null}
+              <Date>{date}</Date>
+            </InfoContainer>
+            <ReplyBlockResp>
               <ReplyIcon src={replyArrow} alt="reply arrow" />
-              <ReplyLink>Reply</ReplyLink>
-            </ReplyBlock>
+              <ReplyLink onClick={showReply}>Reply</ReplyLink>
+            </ReplyBlockResp>
+          </Info>
+          {hideCurrentComment ? (
+            <TextAreaContainer>
+              <TextArea defaultValue={comment} onChange={updateCommentValue} />
+              <UpdateButton onClick={updateComment}>UPDATE</UpdateButton>
+            </TextAreaContainer>
+          ) : (
+            <Comment>{comment}</Comment>
           )}
-        </CommonBlock>
-        {isOpen ? (
-          <Modal
-            currentId={currentId}
-            changeData={changeData}
-            setChangeData={setChangeData}
-            setIsOpen={setIsOpen}
-          />
-        ) : null}
+          <CommonBlock>
+            <Score>
+              <ScoreButton disabled={disablePlus} onClick={plusRate}>
+                <Plus src={plusIcon} alt="plus" />
+              </ScoreButton>
+              <UserScore>{score}</UserScore>
+              <ScoreButton disabled={disableMinus} onClick={minusRate}>
+                <Minus src={minusIcon} alt="minus" />
+              </ScoreButton>
+            </Score>
+            {data.currentUser.username === name ? (
+              <UserFunctions>
+                <DeleteBlock>
+                  <Delete src={deleteIcon} alt="reply arrow" />
+                  <DeleteLink onClick={openModal}>Delete</DeleteLink>
+                </DeleteBlock>
+                <EditBlock>
+                  <EditIcon src={edit} alt="reply arrow" />
+                  <EditLink onClick={AppearTextArea}>Edit</EditLink>
+                </EditBlock>
+              </UserFunctions>
+            ) : (
+              <ReplyBlock>
+                <ReplyIcon src={replyArrow} alt="reply arrow" />
+                <ReplyLink onClick={showReply}>Reply</ReplyLink>
+              </ReplyBlock>
+            )}
+          </CommonBlock>
+          {isReply ? (
+            <ReplyTextContainer>
+              <ReplyImageResp src={data.currentUser.image.png} alt="avatar" />
+              <ReplyTextArea onChange={getReplyValue} />
+              <ReplyInfo>
+                <ReplyImage src={data.currentUser.image.png} alt="avatar" />
+                <ReplyButton onClick={addReply}>REPLY</ReplyButton>
+                <ReplyButtonResp onClick={addReply}>REPLY</ReplyButtonResp>
+              </ReplyInfo>
+            </ReplyTextContainer>
+          ) : null}
+          {isOpen ? (
+            <Modal
+              currentId={currentId}
+              changeData={changeData}
+              setChangeData={setChangeData}
+              setIsOpen={setIsOpen}
+            />
+          ) : null}
+        </CommentContainer>
       </Container>
     </>
   );
@@ -137,15 +196,29 @@ function Comments({
 export default Comments;
 
 const Container = styled.div`
-  width: 343px;
+  /* width: 343px; */
   padding: 16px 16px 24px 16px;
+  max-width: 730px;
+
+  @media (min-width: 768px) {
+    display: flex;
+  }
 `;
+
+const CommentContainer = styled.div``;
 
 const Info = styled.div`
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  width: 100%;
+`;
+
+const InfoContainer = styled.div`
+  display: flex;
   align-items: center;
   column-gap: 16px;
-  margin-bottom: 16px;
 `;
 
 const Avatar = styled.img`
@@ -199,6 +272,27 @@ const Score = styled.div`
   display: flex;
   align-items: center;
   column-gap: 10px;
+  background: #f5f6fa;
+  border-radius: 10px;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+const ScoreResp = styled.div`
+  display: none;
+
+  @media (min-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 20px;
+    background: #f5f6fa;
+    border-radius: 10px;
+    margin-right: 30px;
+    padding-top: 10px;
+  }
 `;
 
 const ScoreButton = styled.button`
@@ -222,6 +316,22 @@ const ReplyBlock = styled.div`
   justify-content: end;
   align-items: center;
   column-gap: 8px;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+const ReplyBlockResp = styled.div`
+  display: none;
+
+  @media (min-width: 768px) {
+    display: block;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    column-gap: 8px;
+  }
 `;
 
 const ReplyIcon = styled.img`
@@ -286,7 +396,10 @@ const DeleteLink = styled.button`
   text-decoration: none;
 `;
 
-const TextAreaContainer = styled.div``;
+const TextAreaContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 const TextArea = styled.textarea`
   width: 311px;
@@ -312,4 +425,86 @@ const UpdateButton = styled.button`
   line-height: 24px;
   color: #ffffff;
   cursor: pointer;
+  align-self: flex-end;
+`;
+
+const ReplyTextContainer = styled.div`
+  margin-top: 24px;
+
+  @media (min-width: 768px) {
+    display: flex;
+    column-gap: 16px;
+  }
+`;
+
+const ReplyTextArea = styled.textarea`
+  max-width: 506px;
+  width: 100%;
+  min-height: 96px;
+  border-radius: 8px;
+  padding: 12px 24px;
+  outline: 1px solid #5357b6;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  resize: none;
+  margin-bottom: 16px;
+  color: #67727e;
+`;
+
+const ReplyInfo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const ReplyImage = styled.img`
+  width: 32px;
+  height: 32px;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+const ReplyImageResp = styled.img`
+  display: none;
+
+  @media (min-width: 768px) {
+    display: block;
+    width: 32px;
+    height: 32px;
+  }
+`;
+
+const ReplyButton = styled.button`
+  width: 104px;
+  height: 48px;
+  border-radius: 8px;
+  background: #5357b6;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #ffffff;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+const ReplyButtonResp = styled.button`
+  display: none;
+
+  @media (min-width: 768px) {
+    display: block;
+    width: 104px;
+    height: 48px;
+    border-radius: 8px;
+    background: #5357b6;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    color: #ffffff;
+    align-self: baseline;
+  }
 `;

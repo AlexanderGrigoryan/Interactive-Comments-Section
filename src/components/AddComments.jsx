@@ -2,7 +2,6 @@ import styled from "styled-components";
 import data from "../data.json";
 
 function AddComments(props) {
-  
   function getTextAreaValue(event) {
     props.setTextAreaValue(event.target.value);
   }
@@ -52,7 +51,8 @@ const Container = styled.div`
 `;
 
 const TextArea = styled.textarea`
-  width: 311px;
+  width: 100%;
+  max-width: 506px;
   min-height: 96px;
   border-radius: 8px;
   padding: 12px 24px;
