@@ -5,12 +5,7 @@ function Modal(props) {
     props.setIsOpen(false);
   }
 
-  function confirmDelete() {
-    props.setChangeData((current) =>
-      current.filter((item) => item.id !== props.currentId)
-    );
-    props.setIsOpen(false);
-  }
+
 
   return (
     <Backdrop>
@@ -22,7 +17,7 @@ function Modal(props) {
         </ModalText>
         <ModalButtons>
           <CancelButton onClick={cancelModal}>NO, CANCEL</CancelButton>
-          <ConfirmButton onClick={confirmDelete}>YES, DELETE</ConfirmButton>
+          <ConfirmButton onClick={props.onClick}>YES, DELETE</ConfirmButton>
         </ModalButtons>
       </ModalWindow>
     </Backdrop>

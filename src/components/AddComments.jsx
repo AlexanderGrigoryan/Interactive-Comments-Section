@@ -1,43 +1,54 @@
 import styled from "styled-components";
 import data from "../data.json";
 
-function AddComments(props) {
+function AddComments({
+  textAreaValue,
+  setTextAreaValue,
+  changeData,
+  setChangeData,
+  img,
+}) {
   function getTextAreaValue(event) {
-    props.setTextAreaValue(event.target.value);
+    setTextAreaValue(event.target.value);
   }
 
   function AddnewComment() {
-    props.setChangeData([
-      ...props.changeData,
-      {
-        id: Math.random(),
-        content: props.textAreaValue,
-        createdAt: "Today",
-        score: 0,
-        user: {
-          image: {
-            png: data.currentUser.image.png,
-            webp: data.currentUser.image.webp,
+    if (textAreaValue.length > 0) {
+      setChangeData([
+        ...changeData,
+        {
+          id: Math.random(),
+          content: textAreaValue,
+          createdAt: "Today",
+          score: 0,
+          user: {
+            image: {
+              png: data.currentUser.image.png,
+              webp: data.currentUser.image.webp,
+            },
+            username: data.currentUser.username,
           },
-          username: data.currentUser.username,
+          replies: [],
         },
-        replies: [],
-      },
-    ]);
-    props.setTextAreaValue("");
+      ]);
+    }
+
+    setTextAreaValue("");
   }
 
   return (
     <>
       <Container>
+        <ImageResp src={img} alt="User Avatar" />
         <TextArea
           onChange={getTextAreaValue}
-          value={props.textAreaValue}
+          value={textAreaValue}
           placeholder="Add a comment…"
         />
         <Info>
-          <Image src={props.img} alt="User Avatar" />
+          <Image src={img} alt="User Avatar" />
           <Button onClick={AddnewComment}>Send</Button>
+          <ButtonResp onClick={AddnewComment}>Send</ButtonResp>
         </Info>
       </Container>
     </>
@@ -48,6 +59,11 @@ export default AddComments;
 
 const Container = styled.div`
   padding: 0 16px;
+
+  @media (min-width: 768px) {
+    display: flex;
+    column-gap: 16px;
+  }
 `;
 
 const TextArea = styled.textarea`
@@ -78,6 +94,20 @@ const Info = styled.div`
 const Image = styled.img`
   width: 32px;
   height: 32px;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+const ImageResp = styled.img`
+  width: 32px;
+  height: 32px;
+  display: none;
+
+  @media (min-width: 768px) {
+    display: block;
+  }
 `;
 
 const Button = styled.button`
@@ -89,4 +119,29 @@ const Button = styled.button`
   font-weight: 500;
   line-height: 24px;
   color: #ffffff;
+  transition: all ease 0.3s;
+  &:hover {
+    background: #c5c6ef;
+  }
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+const ButtonResp = styled.button`
+  width: 104px;
+  height: 48px;
+  border-radius: 8px;
+  background: #5357b6;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #ffffff;
+  display: none;
+  align-self: baseline;
+
+  @media (min-width: 768px) {
+    display: block;
+  }
 `;

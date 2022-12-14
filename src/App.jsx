@@ -37,6 +37,11 @@ function App() {
                     dateReply={reply.createdAt}
                     commentReply={reply.content}
                     scoreReply={reply.score}
+                    currentId={item.id}
+                    replyId={reply.id}
+                    currentReply={item.replies}
+                    changeData={changeData}
+                    setChangeData={setChangeData}
                   />
                 );
               })}

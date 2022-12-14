@@ -9,8 +9,6 @@ import Modal from "./Modal";
 import { useState } from "react";
 
 function Comments({
-  textAreaValue,
-  setTextAreaValue,
   commentValue,
   setCommentValue,
   currentId,
@@ -25,10 +23,11 @@ function Comments({
   const [isOpen, setIsOpen] = useState(false);
   const [hideCurrentComment, setHideCurrentComment] = useState(false);
   const [disablePlus, setDisablePlus] = useState(false);
-  const [disableMinus, setDisableMinus] = useState(true);
+  const [disableMinus, setDisableMinus] = useState(false);
+  const [minusCount, setMinusCount] = useState(0);
+  const [plusCount, setPlusCount] = useState(0);
   const [isReply, setIsReply] = useState(false);
   const [replyValue, setReplyValue] = useState("");
-  const [notMobile, setNotMobile] = useState(false);
 
   function openModal() {
     setIsOpen(true);
@@ -59,10 +58,12 @@ function Comments({
     );
     updateMinus[minusIndex].score -= 1;
     setChangeData(updateMinus);
-    setDisableMinus(true);
-    setDisablePlus(false);
-    setDisableMinus(false);
-    setDisableMinus(true);
+    setMinusCount(minusCount + 1);
+    if (minusCount + 1 === 2 || (minusCount === 0 && plusCount === 0)) {
+      setDisablePlus(false);
+      setDisableMinus(true);
+      setPlusCount(0);
+    }
   }
 
   function plusRate() {
@@ -72,9 +73,12 @@ function Comments({
     );
     updatePlus[plusIndex].score += 1;
     setChangeData(updatePlus);
-    setDisableMinus(false);
-    setDisablePlus(true);
-    setDisableMinus(false);
+    setPlusCount(plusCount + 1);
+    if (plusCount + 1 === 2 || (plusCount === 0 && minusCount === 0)) {
+      setDisablePlus(true);
+      setDisableMinus(false);
+      setMinusCount(0);
+    }
   }
 
   function showReply() {
@@ -86,14 +90,17 @@ function Comments({
   }
 
   function addReply() {
-    setChangeData([
-      ...changeData,
-      {
+    if (replyValue.length > 0) {
+      const replyData = [...changeData];
+      const newReply = replyData.findIndex(
+        (element) => element.id === currentId
+      );
+      replyData[newReply].replies.push({
         id: Math.random(),
         content: replyValue,
         createdAt: "Today",
         score: 0,
-        replyingTo: "ramsesmiron",
+        replyingTo: replyData[newReply].user.username,
         user: {
           image: {
             png: data.currentUser.image.png,
@@ -101,8 +108,17 @@ function Comments({
           },
           username: data.currentUser.username,
         },
-      },
-    ]);
+      });
+      setChangeData(replyData);
+      setIsReply(false);
+    } else {
+      setIsReply(true);
+    }
+  }
+
+  function confirmDelete() {
+    setChangeData((current) => current.filter((item) => item.id !== currentId));
+    setIsOpen(false);
   }
 
   return (
@@ -127,10 +143,25 @@ function Comments({
               ) : null}
               <Date>{date}</Date>
             </InfoContainer>
-            <ReplyBlockResp>
-              <ReplyIcon src={replyArrow} alt="reply arrow" />
-              <ReplyLink onClick={showReply}>Reply</ReplyLink>
-            </ReplyBlockResp>
+            {data.currentUser.username === name ? (
+              <FunctionsContainer>
+                <UserFunctionsResp>
+                  <DeleteBlock>
+                    <Delete src={deleteIcon} alt="reply arrow" />
+                    <DeleteLink onClick={openModal}>Delete</DeleteLink>
+                  </DeleteBlock>
+                  <EditBlock>
+                    <EditIcon src={edit} alt="reply arrow" />
+                    <EditLink onClick={AppearTextArea}>Edit</EditLink>
+                  </EditBlock>
+                </UserFunctionsResp>
+              </FunctionsContainer>
+            ) : (
+              <ReplyBlockResp>
+                <ReplyIcon src={replyArrow} alt="reply arrow" />
+                <ReplyLink onClick={showReply}>Reply</ReplyLink>
+              </ReplyBlockResp>
+            )}
           </Info>
           {hideCurrentComment ? (
             <TextAreaContainer>
@@ -185,6 +216,7 @@ function Comments({
               changeData={changeData}
               setChangeData={setChangeData}
               setIsOpen={setIsOpen}
+              onClick={confirmDelete}
             />
           ) : null}
         </CommentContainer>
@@ -196,7 +228,6 @@ function Comments({
 export default Comments;
 
 const Container = styled.div`
-  /* width: 343px; */
   padding: 16px 16px 24px 16px;
   max-width: 730px;
 
@@ -205,7 +236,10 @@ const Container = styled.div`
   }
 `;
 
-const CommentContainer = styled.div``;
+const CommentContainer = styled.div`
+  max-width: 730px;
+  width: 100%;
+`;
 
 const Info = styled.div`
   display: flex;
@@ -352,6 +386,24 @@ const UserFunctions = styled.div`
   display: flex;
   align-items: center;
   column-gap: 16px;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+const FunctionsContainer = styled.div`
+  display: none;
+
+  @media (min-width: 768px) {
+    display: block;
+  }
+`;
+
+const UserFunctionsResp = styled.div`
+  display: flex;
+  align-items: center;
+  column-gap: 16px;
 `;
 
 const EditBlock = styled.div`
@@ -366,7 +418,7 @@ const EditIcon = styled.img`
   height: 12.25px;
 `;
 
-const EditLink = styled.button`
+const EditLink = styled.a`
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -387,7 +439,7 @@ const Delete = styled.img`
   height: 12.25px;
 `;
 
-const DeleteLink = styled.button`
+const DeleteLink = styled.a`
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -402,7 +454,8 @@ const TextAreaContainer = styled.div`
 `;
 
 const TextArea = styled.textarea`
-  width: 311px;
+  max-width: 730px;
+  width: 100%;
   min-height: 96px;
   border-radius: 8px;
   padding: 12px 24px;
