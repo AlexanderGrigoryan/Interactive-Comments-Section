@@ -201,10 +201,16 @@ function Comments({
           </CommonBlock>
           {isReply ? (
             <ReplyTextContainer>
-              <ReplyImageResp src={data.currentUser.image.png} alt="avatar" />
+              <ReplyImageResp
+                src={process.env.PUBLIC_URL + data.currentUser.image.png}
+                alt="avatar"
+              />
               <ReplyTextArea onChange={getReplyValue} />
               <ReplyInfo>
-                <ReplyImage src={data.currentUser.image.png} alt="avatar" />
+                <ReplyImage
+                  src={process.env.PUBLIC_URL + data.currentUser.image.png}
+                  alt="avatar"
+                />
                 <ReplyButton onClick={addReply}>REPLY</ReplyButton>
                 <ReplyButtonResp onClick={addReply}>REPLY</ReplyButtonResp>
               </ReplyInfo>

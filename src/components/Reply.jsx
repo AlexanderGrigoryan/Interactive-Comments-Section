@@ -26,6 +26,7 @@ function Reply({
   const [disableMinus, setDisableMinus] = useState(false);
   const [minusCount, setMinusCount] = useState(0);
   const [plusCount, setPlusCount] = useState(0);
+  const [isReply, setIsReply] = useState(false);
 
   function openModal() {
     setIsOpen(true);
@@ -64,6 +65,37 @@ function Reply({
     setHideCurrentComment(false);
   }
 
+  function addReply() {
+    if (replyValue.length > 0) {
+      const replyData = [...changeData];
+      const newReply = replyData.findIndex(
+        (element) => element.id === currentId
+      );
+      replyData[newReply].replies.push({
+        id: Math.random(),
+        content: replyValue,
+        createdAt: "Today",
+        score: 0,
+        replyingTo: replyData[newReply].user.username,
+        user: {
+          image: {
+            png: data.currentUser.image.png,
+            webp: data.currentUser.image.webp,
+          },
+          username: data.currentUser.username,
+        },
+      });
+      setChangeData(replyData);
+      setIsReply(false);
+    } else {
+      setIsReply(true);
+    }
+  }
+
+  function getReplyValue(event) {
+    setReplyValue(event.target.value);
+  }
+
   function minusRate() {
     const updateMinus = [...changeData];
     const minusIndex = updateMinus.findIndex(
@@ -98,6 +130,10 @@ function Reply({
       setDisableMinus(false);
       setMinusCount(0);
     }
+  }
+
+  function showReply() {
+    setIsReply(true);
   }
 
   return (
@@ -138,7 +174,7 @@ function Reply({
             ) : (
               <ReplyBlockResp>
                 <ReplyIcon src={replyArrow} alt="reply arrow" />
-                <ReplyLink>Reply</ReplyLink>
+                <ReplyLink onClick={showReply}>Reply</ReplyLink>
               </ReplyBlockResp>
             )}
           </UserInfo>
@@ -179,10 +215,27 @@ function Reply({
             ) : (
               <ReplyBlock>
                 <ReplyIcon src={replyArrow} alt="reply arrow" />
-                <ReplyLink>Reply</ReplyLink>
+                <ReplyLink onClick={showReply}>Reply</ReplyLink>
               </ReplyBlock>
             )}
           </CommonBlock>
+          {isReply ? (
+            <ReplyTextContainer>
+              <ReplyImageResp
+                src={process.env.PUBLIC_URL + data.currentUser.image.png}
+                alt="avatar"
+              />
+              <ReplyTextArea onChange={getReplyValue} />
+              <ReplyInfo>
+                <ReplyImage
+                  src={process.env.PUBLIC_URL + data.currentUser.image.png}
+                  alt="avatar"
+                />
+                <ReplyButton onClick={addReply}>REPLY</ReplyButton>
+                <ReplyButtonResp onClick={addReply}>REPLY</ReplyButtonResp>
+              </ReplyInfo>
+            </ReplyTextContainer>
+          ) : null}
           {isOpen ? (
             <Modal
               currentId={currentId}
@@ -457,5 +510,86 @@ const UpdateButton = styled.button`
   transition: all ease 0.3s;
   &:hover {
     background: #c5c6ef;
+  }
+`;
+
+const ReplyTextContainer = styled.div`
+  margin-top: 24px;
+
+  @media (min-width: 768px) {
+    display: flex;
+    column-gap: 16px;
+  }
+`;
+
+const ReplyTextArea = styled.textarea`
+  max-width: 506px;
+  width: 100%;
+  min-height: 96px;
+  border-radius: 8px;
+  padding: 12px 24px;
+  outline: 1px solid #5357b6;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  resize: none;
+  margin-bottom: 16px;
+  color: #67727e;
+`;
+
+const ReplyInfo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const ReplyImage = styled.img`
+  width: 32px;
+  height: 32px;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+const ReplyImageResp = styled.img`
+  display: none;
+
+  @media (min-width: 768px) {
+    display: block;
+    width: 32px;
+    height: 32px;
+  }
+`;
+
+const ReplyButton = styled.button`
+  width: 104px;
+  height: 48px;
+  border-radius: 8px;
+  background: #5357b6;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #ffffff;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+const ReplyButtonResp = styled.button`
+  display: none;
+
+  @media (min-width: 768px) {
+    display: block;
+    width: 104px;
+    height: 48px;
+    border-radius: 8px;
+    background: #5357b6;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    color: #ffffff;
+    align-self: baseline;
   }
 `;

@@ -32,21 +32,20 @@ function AddComments({
         },
       ]);
     }
-
     setTextAreaValue("");
   }
-
+  console.log(img);
   return (
     <>
       <Container>
-        <ImageResp src={img} alt="User Avatar" />
+        <ImageResp src={process.env.PUBLIC_URL + img} alt="User Avatar" />
         <TextArea
           onChange={getTextAreaValue}
           value={textAreaValue}
           placeholder="Add a comment…"
         />
         <Info>
-          <Image src={img} alt="User Avatar" />
+          <Image src={process.env.PUBLIC_URL + img} alt="User Avatar" />
           <Button onClick={AddnewComment}>Send</Button>
           <ButtonResp onClick={AddnewComment}>Send</ButtonResp>
         </Info>

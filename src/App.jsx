@@ -1,11 +1,11 @@
 import AddComments from "./components/AddComments";
 import Comments from "./components/Comments";
 import Reply from "./components/Reply";
-import Data from "./data.json";
+import data from "./data.json";
 import { useState } from "react";
 
 function App() {
-  const [changeData, setChangeData] = useState(Data.comments);
+  const [changeData, setChangeData] = useState(data.comments);
   const [textAreaValue, setTextAreaValue] = useState("");
   const [commentValue, setCommentValue] = useState("");
 
@@ -54,7 +54,7 @@ function App() {
           setTextAreaValue={setTextAreaValue}
           changeData={changeData}
           setChangeData={setChangeData}
-          img={Data.currentUser.image.png}
+          img={data.currentUser.image.png}
         />
       </div>
     </div>
