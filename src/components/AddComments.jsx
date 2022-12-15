@@ -117,6 +117,7 @@ const Button = styled.button`
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
+  text-transform: uppercase;
   color: #ffffff;
   transition: all ease 0.3s;
   &:hover {
@@ -136,9 +137,14 @@ const ButtonResp = styled.button`
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
+  text-transform: uppercase;
   color: #ffffff;
   display: none;
   align-self: baseline;
+  transition: all ease 0.3s;
+  &:hover {
+    background: #c5c6ef;
+  }
 
   @media (min-width: 768px) {
     display: block;

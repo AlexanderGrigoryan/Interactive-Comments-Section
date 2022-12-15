@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import minusIcon from "../img/icon-minus.svg";
-import plusIcon from "../img/icon-plus.svg";
+import Minus from "../svg/Minus";
+import Plus from "../svg/Plus";
 import replyArrow from "../img/icon-reply.svg";
 import edit from "../img/icon-edit.svg";
 import deleteIcon from "../img/icon-delete.svg";
@@ -126,11 +126,11 @@ function Comments({
       <Container>
         <ScoreResp>
           <ScoreButton disabled={disablePlus} onClick={plusRate}>
-            <Plus src={plusIcon} alt="plus" />
+            <Plus />
           </ScoreButton>
           <UserScore>{score}</UserScore>
           <ScoreButton disabled={disableMinus} onClick={minusRate}>
-            <Minus src={minusIcon} alt="minus" />
+            <Minus />
           </ScoreButton>
         </ScoreResp>
         <CommentContainer>
@@ -174,11 +174,11 @@ function Comments({
           <CommonBlock>
             <Score>
               <ScoreButton disabled={disablePlus} onClick={plusRate}>
-                <Plus src={plusIcon} alt="plus" />
+                <Plus />
               </ScoreButton>
               <UserScore>{score}</UserScore>
               <ScoreButton disabled={disableMinus} onClick={minusRate}>
-                <Minus src={minusIcon} alt="minus" />
+                <Minus />
               </ScoreButton>
             </Score>
             {data.currentUser.username === name ? (
@@ -340,16 +340,12 @@ const ScoreButton = styled.button`
   cursor: pointer;
 `;
 
-const Plus = styled.img``;
-
 const UserScore = styled.p`
   font-size: 16px;
   font-weight: 500;
   line-height: 19px;
   color: #5357b6;
 `;
-
-const Minus = styled.img``;
 
 const ReplyBlock = styled.div`
   display: flex;
@@ -386,6 +382,10 @@ const ReplyLink = styled.a`
   color: #5357b6;
   cursor: pointer;
   text-decoration: none;
+  transition: all ease 0.3s;
+  &:hover {
+    color: #c5c6ef;
+  }
 `;
 
 const UserFunctions = styled.div`
@@ -431,6 +431,10 @@ const EditLink = styled.a`
   color: #5357b6;
   cursor: pointer;
   text-decoration: none;
+  transition: all ease 0.3s;
+  &:hover {
+    color: #c5c6ef;
+  }
 `;
 
 const DeleteBlock = styled.div`
@@ -452,6 +456,10 @@ const DeleteLink = styled.a`
   color: #ed6368;
   cursor: pointer;
   text-decoration: none;
+  transition: all ease 0.3s;
+  &:hover {
+    color: #ffb8bb;
+  }
 `;
 
 const TextAreaContainer = styled.div`
@@ -485,6 +493,10 @@ const UpdateButton = styled.button`
   color: #ffffff;
   cursor: pointer;
   align-self: flex-end;
+  transition: all ease 0.3s;
+  &:hover {
+    background: #c5c6ef;
+  }
 `;
 
 const ReplyTextContainer = styled.div`
@@ -545,6 +557,10 @@ const ReplyButton = styled.button`
   font-weight: 500;
   line-height: 24px;
   color: #ffffff;
+  transition: all ease 0.3s;
+  &:hover {
+    background: #c5c6ef;
+  }
 
   @media (min-width: 768px) {
     display: none;
@@ -553,6 +569,10 @@ const ReplyButton = styled.button`
 
 const ReplyButtonResp = styled.button`
   display: none;
+  transition: all ease 0.3s;
+  &:hover {
+    background: #c5c6ef;
+  }
 
   @media (min-width: 768px) {
     display: block;
