@@ -5,8 +5,6 @@ function Modal(props) {
     props.setIsOpen(false);
   }
 
-
-
   return (
     <Backdrop>
       <ModalWindow>

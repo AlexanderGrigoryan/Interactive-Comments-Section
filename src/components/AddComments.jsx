@@ -34,7 +34,6 @@ function AddComments({
     }
     setTextAreaValue("");
   }
-  console.log(img);
   return (
     <>
       <Container>

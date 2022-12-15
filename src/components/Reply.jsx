@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import minusIcon from "../img/icon-minus.svg";
-import plusIcon from "../img/icon-plus.svg";
 import Minus from "../svg/Minus";
 import Plus from "../svg/Plus";
 import replyArrow from "../img/icon-reply.svg";
@@ -135,7 +133,7 @@ function Reply({
   }
 
   function showReply() {
-    setIsReply(true);
+    setIsReply(!isReply);
   }
 
   return (

@@ -82,7 +82,7 @@ function Comments({
   }
 
   function showReply() {
-    setIsReply(true);
+    setIsReply(!isReply);
   }
 
   function getReplyValue(event) {
